@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <flow>
+        <folder label="Main">
+            <output>
+                <prompt selectionType="RANDOM">
+                    <item>Hello, I am Watson IoT agent. Ask me any questions on device events</item>
+                </prompt>
+                <goto ref="getUserInput_2442994"/>
+            </output>
+            <output>
+                <getUserInput id="getUserInput_2442994">
+                    <search ref="folder_2442998"/>
+                    <search ref="folder_displayvalue"/>
+                    <default>
+                        <output>
+                            <prompt selectionType="RANDOM">
+								<item>I am sorry, I did not understand your question. Please try asking another one.</item>
+								<item>I did not quite get that.</item>
+								<item>I didnt grasp what you said.</item>
+								<item>I'm not following you at the moment.</item>
+                            </prompt>
+                        </output>
+                    </default>
+                </getUserInput>
+            </output>
+        </folder>
+        <folder label="Library">
+            <folder label="Live Content" id="folder_2442998">
+                <input>
+                    <grammar>
+                        <item>Sensors</item>
+						<item>$ Sensors</item>
+                        <item>What are the list of sensors</item>
+                        <item>What * list * sensors</item>
+                        <item>Give me the list of sensors</item>
+                        <item>Give * list * sensors</item>
+                        <item>$ sensor</item>
+                        <item>Places</item>
+						<item>$ Places</item>
+                    </grammar>
+                    <output>
+                        <prompt selectionType="RANDOM">
+                            <item>DEVICES</item>
+                        </prompt>
+                        <goto ref="getUserInput_Device"/>
+                    </output>
+                </input>
+            </folder>
+            <folder label="deviceName">
+        		<getUserInput id="getUserInput_Device">
+                    <input>
+                        <grammar>
+                            <item>$ (DYNAMIC_DATA)={location}</item>
+                        </grammar>
+						<action varName="location" operator="SET_TO">{location.source}</action>
+                        <output>
+                            <prompt>
+								<item>{location},VALUE</item>
+                            </prompt>
+                            <goto ref="getUserInput_DeviceValue"/>
+                        </output>
+                    </input>
+                </getUserInput>
+            </folder>
+            <folder label="printValue" id="folder_displayvalue">
+                <getUserInput id="getUserInput_DeviceValue">
+                    <input>
+                        <grammar>
+                            <item>DISPLAY SENSOR VALUE</item>
+                        </grammar>
+                        <if>
+                            <cond varName="value" operator="EQUALS">NO</cond>
+                            <output>
+                                <prompt>
+                                    <item>Sorry not able to read the temperature at {location}</item>
+                                </prompt>
+                                <goto ref="getUserInput_2442994"/>
+                            </output>
+                        </if>
+                        <output>
+                            <prompt>
+                                <item>The temperature at {location} is {value}</item>
+                            </prompt>
+                        </output>
+                    </input>
+                    <input>
+                        <grammar>
+                            <item>DISPLAY NO DEVICE</item>
+                        </grammar>
+                        <output>
+                            <prompt>
+                                <item>Are you playing with me right?? There is no devices named {location} :D</item>
+                            </prompt>
+                            <goto ref="getUserInput_2442994"/>
+                        </output>
+                    </input>
+                </getUserInput>
+            </folder>
+
+            <folder label="Storage"/>
+        </folder>
+        <folder label="Global"/>
+        <folder label="Concepts">
+
+        </folder>
+    </flow>
+    <entities>
+        <entity name="DYNAMIC_DATA">
+            <value name="DataCapture" value="DataCapture">
+                <grammar>
+                    <item>*</item>
+                </grammar>
+            </value>
+        </entity>
+    </entities>
+    <constants>
+
+    </constants>
+    <variables>
+        <var_folder name="Home">
+            <var name="sensorId" type="TEXT" description="Sensor Id"/>
+            <var name="location" type="TEXT" description="Location"/>
+			<var name="value" type="TEXT" description="value of the sensor"/>
+        </var_folder>
+    </variables>
+    <settings>
+        <setting name="USERIDNUM" type="USER">17384</setting>
+        <setting name="EMAIL" type="USER"/>
+        <setting name="PASSWORD" type="USER"/>
+        <setting name="FIRSTNAME" type="USER">IBM</setting>
+        <setting name="LASTNAME" type="USER">Watson</setting>
+        <setting name="COUNTRY" type="USER">USA</setting>
+        <setting name="STATE" type="USER">NY State</setting>
+        <setting name="CITY" type="USER">NY</setting>
+        <setting name="BDAY" type="USER">1</setting>
+        <setting name="BMONTH" type="USER">1</setting>
+        <setting name="BYEAR" type="USER">2000</setting>
+        <setting name="SEX" type="USER">Male</setting>
+        <setting name="DISPLAYNAME" type="USER">Viney</setting>
+        <setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
+        <setting name="SECURITYPASSWORD" type="USER"/>
+        <setting name="SHOWPERSPROFILE" type="USER">false</setting>
+        <setting name="USETYPE" type="USER">0</setting>
+        <setting name="DATEJOINED" type="USER">2015-07-14 15:12:07.745</setting>
+        <setting name="LASTLOGIN" type="USER">2015-07-14 15:12:07.745</setting>
+        <setting name="LOGINCOUNT" type="USER">0</setting>
+        <setting name="CREDIT" type="USER">100</setting>
+        <setting name="CONVCOUNT" type="USER">4</setting>
+        <setting name="PERSONALITYTYPEID" type="USER">6</setting>
+        <setting name="SHOWSENDMESSAGE" type="USER">true</setting>
+        <setting name="ACTIVATED" type="USER">true</setting>
+        <setting name="MESSENGEREMAIL" type="USER"/>
+        <setting name="MESSENGERPASSWORD" type="USER"/>
+        <setting name="SENDCHATEMAIL" type="USER">false</setting>
+        <setting name="SENDFAVEMAIL" type="USER">true</setting>
+        <setting name="CACHE" type="USER">true</setting>
+        <setting name="CLASSTYPE" type="USER">3</setting>
+        <setting name="AUTOLEARN" type="USER">false</setting>
+        <setting name="LANGUAGE" type="USER">EN</setting>
+        <setting name="RESPONSETIME" type="USER">-2</setting>
+        <setting name="MAXAUTOLEARNITEMS" type="USER">4</setting>
+        <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+        <setting name="TIMEZONEID" type="USER">America/New_York</setting>
+        <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+        <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+        <setting name="INPUTMASKTYPE" type="USER">0</setting>
+        <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+        <setting name="CONCEPTMATCHING" type="USER">1</setting>
+        <setting name="UI_COLOUR"/>
+        <setting name="USE_CONCEPTS">3</setting>
+        <setting name="PARENT_ACCOUNT"/>
+        <setting name="AL_NONE_LABEL">None of the above</setting>
+        <setting name="ASR_RANDOM">true</setting>
+        <setting name="DYNAMIC_MESSAGING">false</setting>
+        <setting name="DOCBASE_NUM_RESULTS">3</setting>
+        <setting name="DOCBASE_DESC_LEN">250</setting>
+        <setting name="STATUS">0</setting>
+        <setting name="DEFAULT_DNR_RETURN_POINT_CANDIDATE">-1</setting>
+        <setting name="ENTITIES_SCOPE">3</setting>
+        <setting name="POSTNODEID"/>
+        <setting name="MULTISENT">0</setting>
+        <setting name="DNR_NODE_ID">-15</setting>
+        <setting name="CLEARCACHE"/>
+    </settings>
+    <specialSettings>
+        <specialSetting label="DNR Join Statement">
+            <variations/>
+        </specialSetting>
+    </specialSettings>
+</dialog>

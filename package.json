@@ -1,0 +1,36 @@
+{
+  "name": "WatsonIoTwithDialog",
+  "version": "0.0.2",
+  "description": "A sample nodejs app for integrating Watson IoT platform with Watson Dialog service",
+  "engines": {
+    "node": ">=0.10.38"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeffdare/temp.git"
+  },
+  "author": "IBM Corp.",
+  "contributors": [
+    {
+      "name": "Jeffrey Dare",
+      "email": "jeffdare@in.ibm.com"
+    }
+  ],
+  "license": "EPL-1.0",
+  "bugs": {
+    "url": "https://github.com/jeffdare/temp/issues"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "postinstall": "node dialogs/install-dialogs.js"
+  },
+  "dependencies": {
+    "async": "^1.5.1",
+    "body-parser": "~1.14.1",
+    "errorhandler": "~1.4.1",
+    "express": "~4.13.3",
+    "request": "^2.67.0",
+    "watson-developer-cloud": "~1.0.6",
+    "ibmiotf": "~0.2.12"
+  }
+}
