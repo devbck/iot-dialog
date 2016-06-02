@@ -80,7 +80,7 @@
                         </if>
                         <output>
                             <prompt>
-                                <item>The temperature at {location} is {value}</item>
+                                <item>The temperature at {location} is {value} degree Fahrenheit. </item>
                             </prompt>
                         </output>
                     </input>

@@ -31,7 +31,6 @@
     "express": "~4.13.3",
     "request": "^2.67.0",
     "watson-developer-cloud": "~1.0.6",
-    "ibmiotf": "~0.2.12",
-    "in-range" : "1.0.0"
+    "ibmiotf": "~0.2.12"
   }
 }

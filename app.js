@@ -182,6 +182,9 @@ app.post('/conversation', function(req, res, next) {
                   return next(err);
                 } 
                 else {
+                  //UNCOMMENT HERE for validate temperature
+                  /*var validateMessage = validateTemp(value);
+                  results.response[0]+=validateMessage;*/
                   res.json({ dialog_id: dialog_id, conversation: results});
                 }
               });
@@ -224,3 +227,19 @@ function getDevices(results) {
 function getDeviceValue(results) {
   return results.indexOf('VALUE') !== -1;
 }
+
+//UNCOMMENT HERE for validate temperature
+/*var MINIMUM_TEMP = 70;
+var MAXIMUM_TEMP = 80;
+
+function validateTemp(temperature) {
+  
+  if(temperature < MINIMUM_TEMP) {
+    return "This temperature is below the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degree Fahrenheit. Increase the temperature of your room."
+  } else if(temperature > MAXIMUM_TEMP){
+    return "This temperature is above the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degree Fahrenheit. Decrease the temperature of your room."
+  } else {
+    return "This temperature is in the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degree Fahrenheit. "
+  }
+}*/
+
