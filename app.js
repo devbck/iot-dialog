@@ -137,23 +137,29 @@ app.post('/conversation', function(req, res, next) {
            
             var value = "";
             if(argument !== undefined && argument[0] !== undefined) {
-              var payload = JSON.parse(new Buffer(argument[0].payload, 'base64').toString('ascii'));
-              
-              var datapointName = "temperature";
-              // Fetch the value from the sensor.
-              /*
-              format of data
-              { "temperature" : 34}
-              OR
-              { "d" : { "temperature" : 43}  }
-              */
-              var datapointValue = payload[datapointName] || payload.d[datapointName];
-              
-              if(datapointValue !== undefined && datapointValue !== null) {
-                value = datapointValue;
-              } else {
+              try {
+                  var payload = JSON.parse(new Buffer(argument[0].payload, 'base64').toString('ascii'));
+                  console.log("Payload is : "+JSON.stringify(payload));
+                  var datapointName = "temperature";
+                  // Fetch the value from the sensor.
+                  /*
+                  format of data
+                  { "temperature" : 34}
+                  OR
+                  { "d" : { "temperature" : 43}  }
+                  */
+                  var datapointValue = payload[datapointName] || payload.d[datapointName];
+
+                  if(datapointValue !== undefined && datapointValue !== null) {
+                    value = datapointValue;
+                  } else {
+                    value = "NO";
+                  }
+              } catch(e) {
+                console.log("Fail : "+e);
                 value = "NO";
               }
+
             } else 
               value = "NO";
 
