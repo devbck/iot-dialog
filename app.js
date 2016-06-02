@@ -35,8 +35,8 @@ var DISPLAY_NO_DEVICE = "DISPLAY NO DEVICE";
 // if bluemix credentials exists, then override local
 var credentials =  extend({
   url: 'https://gateway.watsonplatform.net/dialog/api',
-  username: 'xxxx',
-  password: 'xxxx',
+  "password": "xxxx",
+  "username": "xxxx",
   version: 'v1'
 }, bluemix.getServiceCreds('dialog')); // VCAP_SERVICES
 
@@ -44,8 +44,8 @@ var credentials =  extend({
 var iotCredentials = extend({
   org: 'xxxx',
   id: ''+Date.now(),
-  "auth-key": 'a-xxx-xxxxx',
-  "auth-token": ''
+  "auth-key": 'a-xxxx-ja0xe12jro',
+  "auth-token": 'xxxx'
 }, bluemix.getIoTServiceCreds());
 
 
@@ -100,10 +100,14 @@ app.post('/conversation', function(req, res, next) {
         var deviceResults = argument.results;
         devices = {};
         deviceResults.forEach(function (device) {
-          devices[device.deviceId] = device;
+          var id = device.deviceId;
+          if(device.metadata && device.metadata['Office Number']){
+            id = device.metadata['Office Number'];
+          }
+          devices[id] = device;
         });
         results.response = Object.keys(devices);
-        results.response.unshift("Please select a sensor from the following list : ")
+        results.response.unshift(resultStr);
         res.json({ dialog_id: dialog_id, conversation: results});
 
       }, function onError (argument) {
@@ -207,7 +211,7 @@ console.log('listening at:', port);
 
 //return Devices
 function getDevices(results) {
-  return results.indexOf('DEVICES') !== -1;
+  return results.indexOf('one of the following offices') !== -1;
 }
 
 //return the value of the sensor

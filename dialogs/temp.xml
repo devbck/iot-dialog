@@ -4,9 +4,9 @@
         <folder label="Main">
             <output>
                 <prompt selectionType="RANDOM">
-                    <item>Hello, I am Watson IoT agent. Ask me any questions on device events</item>
+                    <item>Hello, I am your office building concierge. I can make your stay in your office more comfortable.First I need some information from you. What is your office number? I see that you could be in one of the following offices : </item>
                 </prompt>
-                <goto ref="getUserInput_2442994"/>
+                <goto ref="getUserInput_Device"/>
             </output>
             <output>
                 <getUserInput id="getUserInput_2442994">
@@ -29,19 +29,19 @@
             <folder label="Live Content" id="folder_2442998">
                 <input>
                     <grammar>
-                        <item>Sensors</item>
-						<item>$ Sensors</item>
-                        <item>What are the list of sensors</item>
-                        <item>What * list * sensors</item>
-                        <item>Give me the list of sensors</item>
-                        <item>Give * list * sensors</item>
-                        <item>$ sensor</item>
+                        <item>Rooms</item>
+						<item>$ Rooms</item>
+                        <item>What are the list of Rooms</item>
+                        <item>What * list * rooms</item>
+                        <item>Give me the list of places</item>
+                        <item>Give * list * places</item>
+                        <item>$ sensors</item>
                         <item>Places</item>
 						<item>$ Places</item>
                     </grammar>
                     <output>
                         <prompt selectionType="RANDOM">
-                            <item>DEVICES</item>
+                            <item>What is your office number? I see that you could be in one of the following offices :</item>
                         </prompt>
                         <goto ref="getUserInput_Device"/>
                     </output>

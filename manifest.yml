@@ -2,13 +2,9 @@ declared-services:
   iot-dialog-service:
     label: dialog
     plan: standard
-  iot-service-jd:
-    label: iotf-service
-    plan: iotf-service-free
 applications:
 - services:
   - iot-dialog-service
-  - iot-service-jd
   name: watson-iot-dialog
   command: node app.js
   path: .
