@@ -114,6 +114,9 @@ app.post('/conversation', function(req, res, next) {
         
         console.log("Fail");
         console.log(argument);
+        results.response.push("");
+        results.response.push("Bind the Watson IoT Service to get the list of Rooms");
+        res.json({ dialog_id: dialog_id, conversation: results});
       });
     } 
     else if(getDeviceValue(resultStr)) {
@@ -181,12 +184,10 @@ app.post('/conversation', function(req, res, next) {
                 if (err){
                   return next(err);
                 } 
-                else {
-                  //UNCOMMENT HERE for validate temperature
-                  /*var validateMessage = validateTemp(value);
-                  results.response[0]+=validateMessage;*/
-                  res.json({ dialog_id: dialog_id, conversation: results});
-                }
+                //UNCOMMENT HERE for validate temperature
+                /*var validateMessage = validateTemp(value);
+                results.response[0]+=validateMessage;*/
+                res.json({ dialog_id: dialog_id, conversation: results});
               });
             });
           }, function onError (argument) {
@@ -242,4 +243,3 @@ function validateTemp(temperature) {
     return "This temperature is in the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degree Fahrenheit. "
   }
 }*/
-

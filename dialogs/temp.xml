@@ -15,9 +15,9 @@
                     <default>
                         <output>
                             <prompt selectionType="RANDOM">
-								<item>I am sorry, I did not understand your question. Please try asking another one.</item>
+								<item>I am sorry, I did not understand your question. Please try asking another a question on rooms.</item>
 								<item>I did not quite get that.</item>
-								<item>I didnt grasp what you said.</item>
+								<item>I didnt grasp what you said. Try asking a question on rooms</item>
 								<item>I'm not following you at the moment.</item>
                             </prompt>
                         </output>
