@@ -256,10 +256,10 @@ var MAXIMUM_TEMP = 28;
 function validateTemp(temperature) {
   
   if(temperature < MINIMUM_TEMP) {
-    return " This temperature is below the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. Increase the temperature of your room."
+    return " This temperature is below the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. Increase the temperature of your room.";
   } else if(temperature > MAXIMUM_TEMP){
-    return " This temperature is above the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. Decrease the temperature of your room."
+    return " This temperature is above the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. Decrease the temperature of your room.";
   } else {
-    return " This temperature is in the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. "
+    return " This temperature is in the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. ";
   }
 }*/
