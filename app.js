@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/*eslint-env node, express*/
 'use strict';
 
 var express  = require('express'),
@@ -35,17 +36,17 @@ var DISPLAY_NO_DEVICE = "DISPLAY NO DEVICE";
 // if bluemix credentials exists, then override local
 var credentials =  extend({
   url: 'https://gateway.watsonplatform.net/dialog/api',
-  "password": "xxxx",
-  "username": "xxxx",
+  "password": "xxxxx",
+  "username": "xxxxxxx",
   version: 'v1'
 }, bluemix.getServiceCreds('dialog')); // VCAP_SERVICES
 
 // if bluemix credentials exists, then override local
 var iotCredentials = extend({
-  org: 'xxxx',
+  org: 'xxxxxx',
   id: ''+Date.now(),
-  "auth-key": 'a-xxxx-ja0xe12jro',
-  "auth-token": 'xxxx'
+  "auth-key": 'a-xxxxxx-ja0xe12jro',
+  "auth-token": 'xxxxxxxxxxxx'
 }, bluemix.getIoTServiceCreds());
 
 
@@ -69,9 +70,9 @@ var appClient = new ibmiotf.IotfApplication(iotCredentials);
 var dialog = watson.dialog(credentials);
 
 var dialog_id = process.env.DIALOG_ID || dialog_id_in_json;
-
+/*
 //create the dialog
-/*var fullPath = "./dialogs/temp.xml";
+var fullPath = "./dialogs/temp.xml";
 var params = {
   dialog_id : dialog_id,
   file : fs.createReadStream(fullPath)
@@ -82,8 +83,8 @@ dialog.updateDialog(params, function(error, response, body) {
   console.log("resp  : "+JSON.stringify(response));
   console.log("error  : "+error);
   console.log("body  : "+JSON.stringify(body));
-});*/
-
+});
+*/
 app.post('/conversation', function(req, res, next) {
   var params = extend({ dialog_id: dialog_id }, req.body);
   dialog.conversation(params, function(err, results) {
@@ -127,12 +128,12 @@ app.post('/conversation', function(req, res, next) {
         var params = extend({ dialog_id: dialog_id }, req.body);
           params.input = DISPLAY_NO_DEVICE;
           dialog.conversation(params, function(err, results) {
-            if (err){
+            if (err) {
               return next(err);
             } 
-            else {
-              res.json({ dialog_id: dialog_id, conversation: results});
-            }
+            
+            res.json({ dialog_id: dialog_id, conversation: results});
+
           });
       } else {
         appClient
@@ -144,6 +145,7 @@ app.post('/conversation', function(req, res, next) {
                   var payload = JSON.parse(new Buffer(argument[0].payload, 'base64').toString('ascii'));
                   console.log("Payload is : "+JSON.stringify(payload));
                   var datapointName = "temperature";
+                  
                   // Fetch the value from the sensor.
                   /*
                   format of data
@@ -178,15 +180,25 @@ app.post('/conversation', function(req, res, next) {
                 return next(err);
               
               //call the converse api to get the latest value
-              var params = extend({ dialog_id: dialog_id }, req.body);
-              params.input = DISPLAY_SENSOR_VALUE;
-              dialog.conversation(params, function(err, results) {
+              var param = extend({ dialog_id: dialog_id }, req.body);
+              param.input = DISPLAY_SENSOR_VALUE;
+              dialog.conversation(param, function(err, results) {
                 if (err){
                   return next(err);
                 } 
-                //UNCOMMENT HERE for validate temperature
-                /*var validateMessage = validateTemp(value);
-                results.response[0]+=validateMessage;*/
+                
+                //
+                // ------------------------------------------------------------------
+                // Part 2 of the recipe -------
+                // Uncomment next two statements to validate temperature
+                // ------------------------------------------------------------------
+                //
+                
+                /* 
+                var validateMessage = validateTemp(value);
+                results.response[0]+=validateMessage; 
+                */
+               
                 res.json({ dialog_id: dialog_id, conversation: results});
               });
             });
@@ -207,8 +219,8 @@ app.post('/profile', function(req, res, next) {
   dialog.getProfile(params, function(err, results) {
     if (err)
       return next(err);
-    else
-      res.json(results);
+
+    res.json(results);
   });
 });
 
@@ -221,7 +233,7 @@ console.log('listening at:', port);
 
 //return Devices
 function getDevices(results) {
-  return results.indexOf('one of the following offices') !== -1;
+  return results.indexOf('could be in one of the following office(s)') !== -1 || results.indexOf('here are the list of offices') !== -1;
 }
 
 //return the value of the sensor
@@ -229,17 +241,25 @@ function getDeviceValue(results) {
   return results.indexOf('VALUE') !== -1;
 }
 
-//UNCOMMENT HERE for validate temperature
-/*var MINIMUM_TEMP = 70;
-var MAXIMUM_TEMP = 80;
+
+//
+// ------------------------------------------------------------------
+// Part 2 of the recipe -------
+// Uncommecnt the following statements to validate temperature
+// ------------------------------------------------------------------
+//
+                
+/*
+var MINIMUM_TEMP = 24;
+var MAXIMUM_TEMP = 28;
 
 function validateTemp(temperature) {
   
   if(temperature < MINIMUM_TEMP) {
-    return "This temperature is below the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degree Fahrenheit. Increase the temperature of your room."
+    return " This temperature is below the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. Increase the temperature of your room."
   } else if(temperature > MAXIMUM_TEMP){
-    return "This temperature is above the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degree Fahrenheit. Decrease the temperature of your room."
+    return " This temperature is above the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. Decrease the temperature of your room."
   } else {
-    return "This temperature is in the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degree Fahrenheit. "
+    return " This temperature is in the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. "
   }
 }*/

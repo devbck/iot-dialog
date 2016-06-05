@@ -4,7 +4,7 @@
         <folder label="Main">
             <output>
                 <prompt selectionType="RANDOM">
-                    <item>Hello, I am your office building concierge. I can make your stay in your office more comfortable.First I need some information from you. What is your office number? I see that you could be in one of the following offices : </item>
+                    <item>Hello, I am Tom, your office building concierge. What is your office number. I see you could be in one of the following office(s): </item>
                 </prompt>
                 <goto ref="getUserInput_Device"/>
             </output>
@@ -14,11 +14,10 @@
                     <search ref="folder_displayvalue"/>
                     <default>
                         <output>
-                            <prompt selectionType="RANDOM">
-								<item>I am sorry, I did not understand your question. Please try asking another a question on rooms.</item>
-								<item>I did not quite get that.</item>
-								<item>I didnt grasp what you said. Try asking a question on rooms</item>
-								<item>I'm not following you at the moment.</item>
+                            <prompt selectionType="SEQUENTIAL">
+								<item>I am sorry, I did not understand your question. Try asking questions like &lt;i&gt;What is the temperature in my office.&lt;/i&gt;</item>
+								<item>You can ask question like&lt;i&gt; Give me the list of offices.&lt;/i&gt;</item>
+								<item>You can ask question like&lt;i&gt; What can you do for me.&lt;/i&gt;</item>
                             </prompt>
                         </output>
                     </default>
@@ -33,15 +32,48 @@
 						<item>$ Rooms</item>
                         <item>What are the list of Rooms</item>
                         <item>What * list * rooms</item>
-                        <item>Give me the list of places</item>
-                        <item>Give * list * places</item>
-                        <item>$ sensors</item>
-                        <item>Places</item>
-						<item>$ Places</item>
+                        <item>Give me the list of offices</item>
+                        <item>Offices</item>
+						<item>$ Office</item>
                     </grammar>
                     <output>
-                        <prompt selectionType="RANDOM">
-                            <item>What is your office number? I see that you could be in one of the following offices :</item>
+                        <prompt>
+                            <item>You could be in one of the following office(s): </item>
+                        </prompt>
+                        <goto ref="getUserInput_Device"/>
+                    </output>
+                </input>
+                <input>
+                    <grammar>
+                        <item>Help</item>
+						<item>$ Help</item>
+						<item>What</item>
+						<item>what</item>
+                        <item>What can you do for me</item>
+                        <item>What can you *</item>
+                        <item>You tell me, what can you </item>
+                        <item>What can I ask</item>
+                        <item>What else you can tell</item>
+                        <item>What else you can do</item>
+                    </grammar>
+                    <output>
+                        <prompt>
+                            <item>I can tell you the current temperature in your office. What is your office number? You could be in one of the following office(s): </item>
+                        </prompt>
+                        <goto ref="getUserInput_Device"/>
+                    </output>
+                </input>
+                <input>
+                    <grammar>
+                        <item>Temperature</item>
+						<item>$ Temperature</item>
+                        <item>What is the temperature in my office.</item>
+                        <item>What is my office temperature.</item>
+                        <item>OK tell me the temperature</item>
+                    </grammar>
+                    <output>
+                        <prompt>
+                            <item>Sure, but you need to tell me your office number. To make it easy for you, here are the list of offices: </item>
                         </prompt>
                         <goto ref="getUserInput_Device"/>
                     </output>
@@ -73,15 +105,16 @@
                             <cond varName="value" operator="EQUALS">NO</cond>
                             <output>
                                 <prompt>
-                                    <item>Sorry not able to read the temperature at {location}</item>
+                                    <item>Sorry not able to read the temperature in room {location}</item>
                                 </prompt>
                                 <goto ref="getUserInput_2442994"/>
                             </output>
                         </if>
                         <output>
                             <prompt>
-                                <item>The temperature at {location} is {value} degree Fahrenheit. </item>
+                                <item>The temperature in room {location} is {value} degrees.</item>
                             </prompt>
+                            <goto ref="getUserInput_2442994"/>
                         </output>
                     </input>
                     <input>
@@ -90,7 +123,7 @@
                         </grammar>
                         <output>
                             <prompt>
-                                <item>Are you playing with me right?? There is no devices named {location} :D</item>
+                                <item>The office {location} is not correct. Please check and provide correct office number: </item>
                             </prompt>
                             <goto ref="getUserInput_2442994"/>
                         </output>
