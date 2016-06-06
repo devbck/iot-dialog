@@ -4,9 +4,9 @@
         <folder label="Main">
             <output>
                 <prompt selectionType="RANDOM">
-                    <item>Hello, I am Tom, your office building concierge. What is your office number. I see you could be in one of the following office(s): </item>
+                    <item>Hello, I am Tom, your office building concierge. What is your name? </item>
                 </prompt>
-                <goto ref="getUserInput_Device"/>
+                <goto ref="getUserInput_uname"/>
             </output>
             <output>
                 <getUserInput id="getUserInput_2442994">
@@ -15,9 +15,9 @@
                     <default>
                         <output>
                             <prompt selectionType="SEQUENTIAL">
+                                <item>You can ask question like&lt;i&gt; What can you do for me.&lt;/i&gt;</item>
 								<item>I am sorry, I did not understand your question. Try asking questions like &lt;i&gt;What is the temperature in my office.&lt;/i&gt;</item>
-								<item>You can ask question like&lt;i&gt; Give me the list of offices.&lt;/i&gt;</item>
-								<item>You can ask question like&lt;i&gt; What can you do for me.&lt;/i&gt;</item>
+								<item>You can ask question like&lt;i&gt; Give me the list of offices.&lt;/i&gt;</item>								
                             </prompt>
                         </output>
                     </default>
@@ -78,6 +78,43 @@
                         <goto ref="getUserInput_Device"/>
                     </output>
                 </input>
+            </folder>
+            <folder label="userName">
+        		<getUserInput id="getUserInput_uname">
+                    <input>
+                        <grammar>
+                            <item>$ my name is (DYNAMIC_DATA)={uname}</item>
+                            <item>$ I am (DYNAMIC_DATA)={uname}</item>
+                            <item>$ I'm (DYNAMIC_DATA)={uname}</item>
+                            <item>$ called (DYNAMIC_DATA)={uname}</item>
+                            <item>$ call me (DYNAMIC_DATA)={uname}</item>
+                            <item>$ known as (DYNAMIC_DATA)={uname}</item>
+                            <item>$ (DYNAMIC_DATA)={uname}</item>
+                        </grammar>
+						<action varName="uname" operator="SET_TO">{uname.source}</action>
+                        <output>
+                            <prompt>
+								<item>{uname},VALUE</item>
+                            </prompt>
+                            <goto ref="getUserInput_help"/>
+                        </output>
+                    </input>
+                </getUserInput>
+            </folder>
+            <folder label="help">
+        		<getUserInput id="getUserInput_help">
+                    <input>
+                        <grammar>
+                            <item>*</item>
+                        </grammar>
+                        <output>
+                            <prompt>
+								<item>Hi {uname}! What can I do for you?</item>
+                            </prompt>
+                            <goto ref="getUserInput_2442994"/>
+                        </output>
+                    </input>
+                </getUserInput>
             </folder>
             <folder label="deviceName">
         		<getUserInput id="getUserInput_Device">
@@ -155,6 +192,7 @@
             <var name="sensorId" type="TEXT" description="Sensor Id"/>
             <var name="location" type="TEXT" description="Location"/>
 			<var name="value" type="TEXT" description="value of the sensor"/>
+			<var name="uname" type="TEXT" description="User name"/>
         </var_folder>
     </variables>
     <settings>
