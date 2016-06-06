@@ -144,7 +144,7 @@
                                 <prompt>
                                     <item>Sorry not able to read the temperature in room {location}</item>
                                 </prompt>
-                                <goto ref="getUserInput_2442994"/>
+                                <goto ref="getUserInput_Device"/>
                             </output>
                         </if>
                         <output>
@@ -162,7 +162,7 @@
                             <prompt>
                                 <item>The office {location} is not correct. Please check and provide correct office number: </item>
                             </prompt>
-                            <goto ref="getUserInput_2442994"/>
+                            <goto ref="getUserInput_Device"/>
                         </output>
                     </input>
                 </getUserInput>
