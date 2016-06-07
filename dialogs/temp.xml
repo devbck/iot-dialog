@@ -47,10 +47,8 @@
                     <grammar>
                         <item>Help</item>
 						<item>$ Help</item>
-						<item>What</item>
-						<item>what</item>
                         <item>What can you do for me</item>
-                        <item>What can you *</item>
+                        <item>$ What can you do</item>
                         <item>You tell me, what can you </item>
                         <item>What can I ask</item>
                         <item>What else you can tell</item>
@@ -77,7 +75,28 @@
                         </prompt>
                         <goto ref="getUserInput_Device"/>
                     </output>
+                </input>                
+                
+                <!--  Uncomment the following node to add conversation like "Thank you" - "You are welcome" -->
+                
+                <input>
+                    <grammar>
+                        <item>Thanks</item>
+						<item>Thank you</item>
+                        <item>Cool</item>
+                        <item>Great</item>
+                        <item>ty</item>
+                    </grammar>
+                    <output>
+                        <prompt selectionType="RANDOM">
+                            <item>You are very welcome {uname}!</item>
+                            <item>De nada</item>
+                            <item>You bet!!</item>
+                        </prompt>
+                    </output>
                 </input>
+                
+                
             </folder>
             <folder label="userName">
         		<getUserInput id="getUserInput_uname">
@@ -120,6 +139,10 @@
         		<getUserInput id="getUserInput_Device">
                     <input>
                         <grammar>
+                            <item>$ My office number is (DYNAMIC_DATA)={location}</item>
+                            <item>$ I am in (DYNAMIC_DATA)={location}</item>
+                            <item>$ I am at (DYNAMIC_DATA)={location}</item>
+                            <item>$ I am working from (DYNAMIC_DATA)={location}</item>
                             <item>$ (DYNAMIC_DATA)={location}</item>
                         </grammar>
 						<action varName="location" operator="SET_TO">{location.source}</action>
@@ -142,7 +165,7 @@
                             <cond varName="value" operator="EQUALS">NO</cond>
                             <output>
                                 <prompt>
-                                    <item>Sorry not able to read the temperature in room {location}</item>
+                                    <item>Sorry not able to read the temperature in room {location}. Try another room.</item>
                                 </prompt>
                                 <goto ref="getUserInput_Device"/>
                             </output>
@@ -160,7 +183,7 @@
                         </grammar>
                         <output>
                             <prompt>
-                                <item>The office {location} is not correct. Please check and provide correct office number: </item>
+                                <item>The office {location} is not correct. Please check and provide correct office number. </item>
                             </prompt>
                             <goto ref="getUserInput_Device"/>
                         </output>
@@ -196,67 +219,9 @@
         </var_folder>
     </variables>
     <settings>
-        <setting name="USERIDNUM" type="USER">17384</setting>
-        <setting name="EMAIL" type="USER"/>
-        <setting name="PASSWORD" type="USER"/>
-        <setting name="FIRSTNAME" type="USER">IBM</setting>
-        <setting name="LASTNAME" type="USER">Watson</setting>
-        <setting name="COUNTRY" type="USER">USA</setting>
-        <setting name="STATE" type="USER">NY State</setting>
-        <setting name="CITY" type="USER">NY</setting>
-        <setting name="BDAY" type="USER">1</setting>
-        <setting name="BMONTH" type="USER">1</setting>
-        <setting name="BYEAR" type="USER">2000</setting>
-        <setting name="SEX" type="USER">Male</setting>
-        <setting name="DISPLAYNAME" type="USER">Viney</setting>
-        <setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
-        <setting name="SECURITYPASSWORD" type="USER"/>
-        <setting name="SHOWPERSPROFILE" type="USER">false</setting>
-        <setting name="USETYPE" type="USER">0</setting>
-        <setting name="DATEJOINED" type="USER">2015-07-14 15:12:07.745</setting>
-        <setting name="LASTLOGIN" type="USER">2015-07-14 15:12:07.745</setting>
-        <setting name="LOGINCOUNT" type="USER">0</setting>
-        <setting name="CREDIT" type="USER">100</setting>
-        <setting name="CONVCOUNT" type="USER">4</setting>
-        <setting name="PERSONALITYTYPEID" type="USER">6</setting>
-        <setting name="SHOWSENDMESSAGE" type="USER">true</setting>
-        <setting name="ACTIVATED" type="USER">true</setting>
-        <setting name="MESSENGEREMAIL" type="USER"/>
-        <setting name="MESSENGERPASSWORD" type="USER"/>
-        <setting name="SENDCHATEMAIL" type="USER">false</setting>
-        <setting name="SENDFAVEMAIL" type="USER">true</setting>
-        <setting name="CACHE" type="USER">true</setting>
-        <setting name="CLASSTYPE" type="USER">3</setting>
-        <setting name="AUTOLEARN" type="USER">false</setting>
-        <setting name="LANGUAGE" type="USER">EN</setting>
-        <setting name="RESPONSETIME" type="USER">-2</setting>
-        <setting name="MAXAUTOLEARNITEMS" type="USER">4</setting>
-        <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
-        <setting name="TIMEZONEID" type="USER">America/New_York</setting>
-        <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
-        <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
-        <setting name="INPUTMASKTYPE" type="USER">0</setting>
-        <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
-        <setting name="CONCEPTMATCHING" type="USER">1</setting>
-        <setting name="UI_COLOUR"/>
-        <setting name="USE_CONCEPTS">3</setting>
-        <setting name="PARENT_ACCOUNT"/>
-        <setting name="AL_NONE_LABEL">None of the above</setting>
-        <setting name="ASR_RANDOM">true</setting>
-        <setting name="DYNAMIC_MESSAGING">false</setting>
-        <setting name="DOCBASE_NUM_RESULTS">3</setting>
-        <setting name="DOCBASE_DESC_LEN">250</setting>
-        <setting name="STATUS">0</setting>
-        <setting name="DEFAULT_DNR_RETURN_POINT_CANDIDATE">-1</setting>
-        <setting name="ENTITIES_SCOPE">3</setting>
-        <setting name="POSTNODEID"/>
-        <setting name="MULTISENT">0</setting>
-        <setting name="DNR_NODE_ID">-15</setting>
-        <setting name="CLEARCACHE"/>
+
     </settings>
     <specialSettings>
-        <specialSetting label="DNR Join Statement">
-            <variations/>
-        </specialSetting>
+
     </specialSettings>
 </dialog>
