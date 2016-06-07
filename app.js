@@ -92,8 +92,9 @@ app.post('/conversation', function(req, res, next) {
     var resultStr = results.response.join(' ');
     if (err){
       return next(err);
-    }
+    } // Check if to return the list of devices based on the response of dialog service
     else if(getDevices(resultStr)) {
+      //Get the list of devices from Watson IoT platform.
       appClient
       .getAllDevices().then (function onSuccess (argument) {
         console.log("Success");
@@ -102,28 +103,31 @@ app.post('/conversation', function(req, res, next) {
         devices = {};
         deviceResults.forEach(function (device) {
           var id = device.deviceId;
+          //Get the content from the device Metadata
           if(device.metadata && device.metadata['Office Number']){
             id = device.metadata['Office Number'];
           }
+          //store the device data
           devices[id] = device;
         });
+        //return the response of list of devices
         results.response = Object.keys(devices);
         results.response.unshift(resultStr);
         res.json({ dialog_id: dialog_id, conversation: results});
 
       }, function onError (argument) {
-        
+        // the Watson IoT service is not bound.
         console.log("Fail");
         console.log(argument);
         results.response.push("");
         results.response.push("Bind the Watson IoT Service to get the list of Rooms");
         res.json({ dialog_id: dialog_id, conversation: results});
       });
-    } 
+    } //Check if to get the device last event from the dialog response
     else if(getDeviceValue(resultStr)) {
       var device = resultStr.split(',')[0];
       var selected = devices[device];
-      
+      //User has entered a non existent device name, return device not found
       if(selected === undefined){
         var params = extend({ dialog_id: dialog_id }, req.body);
           params.input = DISPLAY_NO_DEVICE;
@@ -136,14 +140,16 @@ app.post('/conversation', function(req, res, next) {
 
           });
       } else {
+        //Get the last event of the device using the Last event cache from Waston IoT service(https://docs.internetofthings.ibmcloud.com/swagger/v0002.html#!/Event_Cache)
         appClient
           .getLastEvents(selected.typeId, selected.deviceId).then (function onSuccess (argument) {
            
             var value = "";
             if(argument !== undefined && argument[0] !== undefined) {
-              try {
+              try { //read the payload and try to parse the content
                   var payload = JSON.parse(new Buffer(argument[0].payload, 'base64').toString('ascii'));
                   console.log("Payload is : "+JSON.stringify(payload));
+                  // read the datapoint value
                   var datapointName = "temperature";
                   
                   // Fetch the value from the sensor.
@@ -157,7 +163,7 @@ app.post('/conversation', function(req, res, next) {
 
                   if(datapointValue !== undefined && datapointValue !== null) {
                     value = datapointValue;
-                  } else {
+                  } else { // data point not found. Return error
                     value = "NO";
                   }
               } catch(e) {
@@ -167,7 +173,7 @@ app.post('/conversation', function(req, res, next) {
 
             } else 
               value = "NO";
-
+            // update the profile with datapoint "value" so that it can be returned as part of dialog response
             var profile = {
               client_id: req.body.client_id,
               dialog_id: dialog_id,
@@ -250,16 +256,16 @@ function getDeviceValue(results) {
 //
                 
 /*
-var MINIMUM_TEMP = 24;
-var MAXIMUM_TEMP = 28;
+var MINIMUM_TEMP = 19;
+var MAXIMUM_TEMP = 25;
 
 function validateTemp(temperature) {
   
   if(temperature < MINIMUM_TEMP) {
-    return " This temperature is below the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. Increase the temperature of your room.";
+    return " The temperature is getting cold right now.  I will turn on the heat for you..";
   } else if(temperature > MAXIMUM_TEMP){
-    return " This temperature is above the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. Decrease the temperature of your room.";
+    return " The temperature is getting hot.  I will turn on the air conditioning for you.";
   } else {
-    return " This temperature is in the comfortable limit of "+MINIMUM_TEMP+" - "+MAXIMUM_TEMP+" degrees. ";
+    return " This temperature should be nice and comfortable.. ";
   }
 }*/
