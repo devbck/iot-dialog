@@ -78,7 +78,7 @@
                 </input>                
                 
                 <!--  Uncomment the following node to add conversation like "Thank you" - "You are welcome" -->
-                
+                <!-- 
                 <input>
                     <grammar>
                         <item>Thanks</item>
@@ -89,13 +89,13 @@
                     </grammar>
                     <output>
                         <prompt selectionType="RANDOM">
-                            <item>You are very welcome {uname}!</item>
+                            <item>You are very welcome {uname}!!</item>
                             <item>De nada</item>
                             <item>You bet!!</item>
                         </prompt>
                     </output>
                 </input>
-                
+                 -->
                 
             </folder>
             <folder label="userName">

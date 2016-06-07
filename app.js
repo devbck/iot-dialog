@@ -29,27 +29,20 @@ var express  = require('express'),
 // Bootstrap application settings
 require('./config/express')(app);
 
-//for conversing with the dialog service
-var DISPLAY_SENSOR_VALUE = "DISPLAY SENSOR VALUE";
-var DISPLAY_NO_DEVICE = "DISPLAY NO DEVICE";
-
-// if bluemix credentials exists, then override local
+// 
+// Set crredentials and service wrappers for Watson Dialog service
+// - if credentials for Watson Dialog service exists, then override local
+// - set dialog service wrapper
+// - set dialog ID
+//
 var credentials =  extend({
   url: 'https://gateway.watsonplatform.net/dialog/api',
-  "password": "xxxxx",
-  "username": "xxxxxxx",
+  "password": "xxxxxxxx",
+  "username": "xxxxxxxxxxxxxxxx",
   version: 'v1'
 }, bluemix.getServiceCreds('dialog')); // VCAP_SERVICES
-
-// if bluemix credentials exists, then override local
-var iotCredentials = extend({
-  org: 'xxxxxx',
-  id: ''+Date.now(),
-  "auth-key": 'a-xxxxxx-ja0xe12jro',
-  "auth-token": 'xxxxxxxxxxxx'
-}, bluemix.getIoTServiceCreds());
-
-
+// Create the service wrapper
+var dialog = watson.dialog(credentials);
 var dialog_id_in_json = (function() {
   try {
     var dialogsFile = path.join(path.dirname(__filename), 'dialogs', 'dialog-id.json');
@@ -59,32 +52,30 @@ var dialog_id_in_json = (function() {
   }
 })();
 
-//Watson IoT devices
-var devices = {};
-//device events
-var temps;
+var dialog_id = process.env.DIALOG_ID || dialog_id_in_json|| "bbe01ff1-296e-48cc-a38c-e96f046a6bcf";
 
+// 
+// Create application client for Watson IoTP service 
+// - If credentials for Watson IoT Platform service exists, then override local
+//
+var iotCredentials = extend({
+  org: 'xxxxx',
+  id: ''+Date.now(),
+  "auth-key": 'a-xxxxx-ja0xe12jro',
+  "auth-token": 'xxxxxxxxxxxx'
+}, bluemix.getIoTServiceCreds());
 var appClient = new ibmiotf.IotfApplication(iotCredentials);
 
-// Create the service wrapper
-var dialog = watson.dialog(credentials);
 
-var dialog_id = process.env.DIALOG_ID || dialog_id_in_json;
-/*
-//create the dialog
-var fullPath = "./dialogs/temp.xml";
-var params = {
-  dialog_id : dialog_id,
-  file : fs.createReadStream(fullPath)
-};
+// Variables used for Dialog and WIoTP service interaction
+var DISPLAY_SENSOR_VALUE = "DISPLAY SENSOR VALUE";
+var DISPLAY_NO_DEVICE = "DISPLAY NO DEVICE";
+//IoT devices map
+var devices = {};
 
-dialog.updateDialog(params, function(error, response, body) {
-
-  console.log("resp  : "+JSON.stringify(response));
-  console.log("error  : "+error);
-  console.log("body  : "+JSON.stringify(body));
-});
-*/
+//
+// Invoke POST method to converse with dialog service
+// 
 app.post('/conversation', function(req, res, next) {
   var params = extend({ dialog_id: dialog_id }, req.body);
   dialog.conversation(params, function(err, results) {
@@ -93,13 +84,20 @@ app.post('/conversation', function(req, res, next) {
     if (err){
       return next(err);
     } // Check if to return the list of devices based on the response of dialog service
-    else if(getDevices(resultStr)) {
-      //Get the list of devices from Watson IoT platform.
+    else if(resultStr.indexOf('could be in one of the following office(s)') !== -1 || 
+              resultStr.indexOf('here are the list of offices') !== -1) {
+      // 
+      // Use WIoTP application client to connect to WIoTP service and get data of all devices.
+      //
       appClient
       .getAllDevices().then (function onSuccess (argument) {
         console.log("Success");
         console.log(argument);
         var deviceResults = argument.results;
+        //
+        // Add all IoT devices in an array. The index of the array is the Metadata
+        // set in during device creation/update in Watson IoT Platform service
+        //
         devices = {};
         deviceResults.forEach(function (device) {
           var id = device.deviceId;
@@ -116,7 +114,9 @@ app.post('/conversation', function(req, res, next) {
         res.json({ dialog_id: dialog_id, conversation: results});
 
       }, function onError (argument) {
+        //
         // the Watson IoT service is not bound.
+        //
         console.log("Fail");
         console.log(argument);
         results.response.push("");
@@ -140,7 +140,9 @@ app.post('/conversation', function(req, res, next) {
 
           });
       } else {
+        //
         //Get the last event of the device using the Last event cache from Waston IoT service(https://docs.internetofthings.ibmcloud.com/swagger/v0002.html#!/Event_Cache)
+        //
         appClient
           .getLastEvents(selected.typeId, selected.deviceId).then (function onSuccess (argument) {
            
@@ -173,7 +175,9 @@ app.post('/conversation', function(req, res, next) {
 
             } else 
               value = "NO";
-            // update the profile with datapoint "value" so that it can be returned as part of dialog response
+            //  
+            // update the dialog profile with datapoint "value" so that it can be returned as part of dialog response
+            //
             var profile = {
               client_id: req.body.client_id,
               dialog_id: dialog_id,
@@ -185,7 +189,9 @@ app.post('/conversation', function(req, res, next) {
               if (err)
                 return next(err);
               
-              //call the converse api to get the latest value
+              // 
+              // Call dialog api to get the latest last conversation value
+              //
               var param = extend({ dialog_id: dialog_id }, req.body);
               param.input = DISPLAY_SENSOR_VALUE;
               dialog.conversation(param, function(err, results) {
@@ -237,11 +243,6 @@ var port = process.env.VCAP_APP_PORT || 3001;
 app.listen(port);
 console.log('listening at:', port);
 
-//return Devices
-function getDevices(results) {
-  return results.indexOf('could be in one of the following office(s)') !== -1 || results.indexOf('here are the list of offices') !== -1;
-}
-
 //return the value of the sensor
 function getDeviceValue(results) {
   return results.indexOf('VALUE') !== -1;
@@ -252,6 +253,8 @@ function getDeviceValue(results) {
 // ------------------------------------------------------------------
 // Part 2 of the recipe -------
 // Uncommecnt the following statements to validate temperature
+// - This function is a example of "how to set dialog response to
+//   the user from the application"
 // ------------------------------------------------------------------
 //
                 
