@@ -4,10 +4,10 @@ declared-services:
     plan: standard
 applications:
 - services:
-  - iot-dialog-service
-  name: watson-iot-dialog
+  - Conversation-3e
+  name: watson-iot-conversation
   command: node app.js
   path: .
   memory: 512M
   env:
-    NODE_ENV: production
+    NODE_ENV: sandbox
